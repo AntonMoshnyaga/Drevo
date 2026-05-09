@@ -1,0 +1,131 @@
+.auth_wrapper {
+    display: flex;
+    min-height: 100vh;
+    background-color: #E4DFD6; /* Цвет фона из макета */
+}
+
+.hero_side {
+    flex: 1.2;
+    position: relative;
+    overflow: hidden;
+}
+
+.bg_image {
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to right, rgba(228, 223, 214, 0) 70%, #E4DFD6 100%);
+}
+
+.form_side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    position: relative;
+}
+
+.back_link {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    text-decoration: none;
+    color: #171717;
+    font-size: 14px;
+}
+
+.login_prompt {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.login_link {
+    text-decoration: none;
+    color: #171717;
+    font-size: 14px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.login_link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.form_container {
+    margin: auto;
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo_wrapper {
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 20px;
+    margin-bottom: 30px;
+    color: #171717;
+}
+
+.form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input {
+    width: 100%;
+    padding: 16px 24px;
+    border: 1px solid #AD9561; /* Золотистая рамка из макета */
+    border-radius: 30px;
+    background: transparent;
+    outline: none;
+    font-size: 16px;
+    color: #171717;
+}
+
+.input::placeholder {
+    color: #171717;
+    opacity: 0.8;
+}
+
+.login_prompt {
+    text-align: center;
+    font-size: 14px;
+    margin: 10px 0;
+    color: #171717;
+}
+
+.submit_btn {
+    background-color: #202E2B; /* Темно-зеленый из ваших стилей */
+    color: white;
+    padding: 16px;
+    border-radius: 4px; /* Квадратная кнопка как в макете */
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: opacity 0.2s;
+    text-transform: none;
+}
+
+.submit_btn:hover {
+    opacity: 0.9;
+}
+
+/* Адаптив для планшетов/телефонов */
+@media (max-width: 900px) {
+    .hero_side {
+        display: none;
+    }
+}

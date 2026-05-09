@@ -1,0 +1,17 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_DATABASE: drevo_db
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3306:3306"
+    volumes:
+      # Монтируем файл инициализации
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      # Монтируем папку для хранения данных (чтобы они не пропадали)
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

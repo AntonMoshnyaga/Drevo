@@ -1,0 +1,266 @@
+.main {
+    width: 100%;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.section_light {
+    background-color: var(--background);
+    padding: 100px 0;
+    color: #171717;
+}
+
+.section_dark {
+    background-color: #202E2B;
+    padding: 100px 0;
+    color: var(--background);
+}
+
+/* Заголовки */
+.title_group {
+    margin-bottom: 40px;
+}
+
+.underline {
+    display: block;
+    width: 120px;
+    height: 2px;
+    background-color: #AD9561;
+    margin-top: 15px;
+}
+
+.center_title {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 60px;
+}
+
+/* Hero секция */
+.hero_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 60px;
+}
+
+.hero_list {
+    list-style: none;
+    margin: 20px 0;
+    padding: 0;
+}
+
+.hero_list li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.hero_list li::before {
+    content: "•";
+    color: #AD9561;
+    position: absolute;
+    left: 0;
+}
+
+/* Секция возможностей с силуэтом */
+.features_about_grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    align-items: center;
+    gap: 80px;
+}
+
+.feature_item {
+    margin-bottom: 30px;
+}
+
+.feature_item h3 {
+    color: #AD9561;
+    font-size: 16px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.feature_item p {
+    font-size: 14px;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+/* Сетка "Для кого" */
+.audience_grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    text-align: center;
+}
+
+.audience_card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cta_box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0; 
+}
+
+.steps_grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.step_item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.step_header {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.number_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.step_number {
+    font-size: 80px;
+    line-height: 0.8;
+    color: #E4DFD6;
+    font-weight: 300;
+}
+
+.number_line {
+    width: 100%;
+    height: 2px;
+    background-color: #AD9561;
+    margin-top: 10px;
+}
+
+.feature_icon {
+    width: 80px;
+    height: 100px;
+    border: 1px solid #AD9561;
+    border-radius: 40px 40px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+}
+
+.arrow_container {
+    padding-top: 60px;
+    flex: 0.5;
+}
+
+.long_arrow {
+    width: 100%;
+    height: 1px;
+    background-color: #E4DFD6;
+    position: relative;
+}
+
+.long_arrow::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -4px;
+    width: 8px;
+    height: 8px;
+    border-top: 1px solid #E4DFD6;
+    border-right: 1px solid #E4DFD6;
+    transform: rotate(45deg);
+}
+
+.step_content {
+    max-width: 250px;
+    color: #E4DFD6;
+}
+
+.title_group {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.underline {
+    display: block;
+    width: 120px;
+    height: 2px;
+    background-color: #AD9561;
+    margin: 15px auto 0;
+}
+
+.content_wrapper {
+  display: flex;
+  align-items: flex-end; /* Выравнивание по нижней линии, так как дерево "растет" снизу */
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.audience_grid_row {
+  display: flex;
+  flex: 2; /* Занимает больше места */
+  justify-content: space-between;
+  gap: 15px;
+  padding-bottom: 40px; /* Приподнимаем карточки над уровнем корней дерева */
+}
+
+.audience_card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 160px;
+}
+
+.audience_image_container {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.tree_img {
+  object-fit: contain;
+  /* Если нужно, чтобы дерево уходило в самый низ секции без паддингов */
+  margin-bottom: -100px; 
+}
+
+/* Адаптивность: на мобильных превращаем в колонку */
+@media (max-width: 1024px) {
+  .content_wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .audience_grid_row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-bottom: 20px;
+  }
+
+  .tree_img {
+    margin-bottom: 0;
+    width: 300px;
+  }
+}

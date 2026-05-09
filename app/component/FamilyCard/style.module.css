@@ -1,0 +1,31 @@
+.card {
+    background-color: #202E2B; /* Ваш темно-зелений колір */
+    border: 1px solid #AD9561; /* Золотиста рамка */
+    padding: 20px;
+    border-radius: 8px;
+    cursor: pointer; /* Змінює курсор на "руку" */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 200px;
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Картка трохи піднімається */
+    box-shadow: 0 5px 15px rgba(173, 149, 97, 0.3); /* Золотисте сяйво */
+    background-color: #263632; /* Трохи світліший фон при наведенні */
+}
+
+.family_name {
+    color: #AD9561;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.member_count {
+    color: #E4DFD6;
+    font-size: 0.9rem;
+    margin: 0;
+    opacity: 0.8;
+}

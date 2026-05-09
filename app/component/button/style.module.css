@@ -1,0 +1,35 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.primary {
+    background-color: #202E2B;
+    color: var(--background);
+    border: 1px solid #202E2B;
+}
+
+.primary:hover {
+    background-color: #171717;
+    border-color: #AD9561;
+}
+
+.outline {
+    background-color: transparent;
+    border: 1px solid #AD9561;
+    color: #AD9561;
+    transition: all 0.3s ease;
+}
+
+.outline:hover {
+    background-color: #AD9561;
+    color: #202E2B;          
+    border-color: #AD9561;
+}
