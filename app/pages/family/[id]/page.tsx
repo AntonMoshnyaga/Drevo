@@ -10,6 +10,7 @@ import Image from 'next/image';
 import styles from './style.module.css';
 import { Node3D } from '../../../component/Node3D/Node3D';
 import Node2D from '../../../component/Node2D/Node2D';
+import Edge3D from '../../../component/Edge3D/Edge3D';
 
 export default function FamilyPage() {
     const params = useParams();
@@ -28,9 +29,9 @@ export default function FamilyPage() {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({ name: '', gender: 'Чоловіча', birthDate: '', deathDate: '', photoUrl: '' });
     const [searchQuery, setSearchQuery] = useState('');
-    const nodeTypes = {
-        familyNode: Node2D,
-    };
+    const nodeTypes = useMemo(() => ({
+        familyNode: Node2D // Переконайтеся, що в processedNodes тип вказаний саме як 'familyNode'
+    }), []);
 
     const onNodesChange: OnNodesChange = useCallback(
         (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -113,6 +114,11 @@ export default function FamilyPage() {
             alert(error.message || "Не вдалося зберегти зв'язок.");
         }
     }, [edges, setEdges]);
+
+    const getPersonName = (id: string) => {
+        const node = nodes.find(n => n.id === id || String(n.id) === String(id));
+        return node?.data?.label || 'Невідомий';
+    };
 
     const handleDeleteMember = async () => {
         if (!selectedMember?.id) return;
@@ -287,11 +293,20 @@ export default function FamilyPage() {
                         
                         <ul className={styles.connections_list}>
                             {edges.length > 0 ? (
-                                edges.map((edge, index) => (
-                                    <li key={index} className={styles.connection_item}>
-                                        Зв'язок #{index + 1}
-                                    </li>
-                                ))
+                                edges.map((edge: any, index) => { // Используем any для обхода строгой проверки типа Edge
+                                    const sourceId = edge.source || edge.parent_id;
+                                    const targetId = edge.target || edge.child_id;
+                                    const relType = edge.relation_type || edge.data?.type || 'Зв’язок';
+
+                                    return (
+                                        <li key={index} className={styles.connection_item}>
+                                            <strong>{getPersonName(sourceId)}</strong> 
+                                            <span className={styles.relation_arrow}> → </span> 
+                                            <strong>{getPersonName(targetId)}</strong>
+                                            <div className={styles.relation_type}>{relType}</div>
+                                        </li>
+                                    );
+                                })
                             ) : (
                                 <li className={styles.empty_text}>Немає зв'язків</li>
                             )}
@@ -318,25 +333,49 @@ export default function FamilyPage() {
                         <Controls />
                     </ReactFlow>
                     ) : (
-                        <Canvas camera={{ position: [0, 0, 10] }}>
-                            <ambientLight intensity={0.8} />
-                            <pointLight position={[10, 10, 10]} />
-                            <OrbitControls makeDefault enabled={!isDragging} />
-                            {nodes.map((node) => (
-                                <Node3D 
-                                    key={node.id} 
-                                    id={node.id}
-                                    position={[node.position.x / 100, -node.position.y / 100, 0]} 
-                                    label={node.data.label}
-                                    photo_url={node.data.photo_url} 
-                                    gender={node.data.gender === 1 ? 'Чоловіча' : 'Жіноча'}
-                                    birth_date={node.data.birth_date}
-                                    onClick={() => onNodeClick(null, node)}
-                                    onNodeDragStart={() => setIsDragging(true)} 
-                                    onNodeDrag={handle3DNodeDrag}
+                    <Canvas camera={{ position: [0, 0, 10] }}>
+                        <ambientLight intensity={0.8} />
+                        <pointLight position={[10, 10, 10]} />
+                        <OrbitControls makeDefault enabled={!isDragging} />
+                        
+                        {/* 1. Відмальовуємо зв'язки (лінії) */}
+                        {edges.map((edge) => {
+                            // Шукаємо координати батька та дитини саме в processedNodes
+                            const sourceNode = processedNodes.find(n => String(n.id) === String(edge.source));
+                            const targetNode = processedNodes.find(n => String(n.id) === String(edge.target));
+
+                            // Якщо якогось вузла немає, пропускаємо лінію
+                            if (!sourceNode || !targetNode) return null;
+
+                            // Конвертуємо координати так само, як і для 3D вузлів
+                            const startPosition: [number, number, number] = [sourceNode.position.x / 100, -sourceNode.position.y / 100, 0];
+                            const endPosition: [number, number, number] = [targetNode.position.x / 100, -targetNode.position.y / 100, 0];
+
+                            return (
+                                <Edge3D 
+                                    key={edge.id || `edge-${edge.source}-${edge.target}`} 
+                                    start={startPosition} 
+                                    end={endPosition} 
                                 />
-                            ))}
-                        </Canvas>
+                            );
+                        })}
+
+                        {/* 2. Відмальовуємо самі вузли (сфери/картки) */}
+                        {processedNodes.map((node) => ( // ЗМІНЕНО: nodes -> processedNodes
+                            <Node3D 
+                                key={node.id} 
+                                id={node.id}
+                                position={[node.position.x / 100, -node.position.y / 100, 0]} 
+                                label={node.data.label}
+                                photo_url={node.data.photo_url} 
+                                gender={node.data.gender === 1 ? 'Чоловіча' : 'Жіноча'}
+                                birth_date={node.data.birth_date}
+                                onClick={() => onNodeClick(null, node as any)}
+                                onNodeDragStart={() => setIsDragging(true)} 
+                                onNodeDrag={handle3DNodeDrag}
+                            />
+                        ))}
+                    </Canvas>
                     )}
                 </div>
             </main>
