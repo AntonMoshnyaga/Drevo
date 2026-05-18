@@ -6,13 +6,12 @@ export default function AboutPage() {
     return (
     <main className={styles.main}>
     
-      {/* SECTION 1: WHY CREATE? */}
         <section className={styles.section_light}>
         <div className={styles.container}>
             <div className={styles.hero_grid}>
             <div className={styles.hero_content}>
                 <div className={styles.title_group}>
-                <h1 className="text-4xl uppercase leading-tight">Навіщо створювати<br/>родинне дерево?</h1>
+                <h1 className="text-3xl md:text-4xl uppercase leading-tight">Навіщо створювати<br/>родинне дерево?</h1>
                 <span className={styles.underline}></span>
                 </div>
                 <p className="mb-6 opacity-90">
@@ -25,25 +24,36 @@ export default function AboutPage() {
                 <li>Створіть єдине місце для всієї родини</li>
                 </ul>
                 <p className="mb-8 font-medium">Drevo допомагає систематизувати ці дані просто і зрозуміло.</p>
-                <div className="flex gap-4">
+                <div className="flex gap-4 justify-center md:justify-start">
                 <Button href="/pages/registr" variant="primary">Розпочати</Button>
                 </div>
             </div>
-            <div className="flex justify-end">
-                <Image src="/tree_illustration.svg" alt="Tree" width={450} height={450} />
+            <div className="flex justify-center md:justify-end">
+                <Image 
+                    src="/tree_illustration.svg" 
+                    alt="Tree" 
+                    width={450} 
+                    height={450} 
+                    className="w-full max-w-[350px] md:max-w-[450px] h-auto" 
+                />
             </div>
             </div>
         </div>
         </section>
 
-        {/* SECTION 2: POSSIBILITIES (DARK) */}
         <section id="details" className={styles.section_dark}>
         <div className={styles.container}>
             <div className={styles.features_about_grid}>
-            <div className="opacity-40">
-                <Image src="/tree_silhouette.svg" alt="Silhouette" width={537} height={537} />
+            <div className="opacity-40 hidden md:block">
+                <Image 
+                    src="/tree_silhouette.svg" 
+                    alt="Silhouette" 
+                    width={537} 
+                    height={537} 
+                    className="w-full h-auto"
+                />
             </div>
-            <div>
+            <div className={styles.features_content}>
                 <div className={styles.title_group}>
                 <h2 className="text-2xl uppercase tracking-widest text-[#AD9561]">Можливості Drevo</h2>
                 <span className={styles.underline}></span>
@@ -70,16 +80,13 @@ export default function AboutPage() {
         </div>
         </section>
 
-        {/* SECTION 3: FOR WHOM */}
         <section className={styles.section_light}>
         <div className={styles.container}>
-            {/* Заголовок по центру */}
             <div className={styles.center_title}>
             <h2 className="text-2xl uppercase tracking-widest">Для кого Drevo</h2>
             <span className={styles.underline}></span>
         </div>
 
-            {/* Основной контент секции */}
         <div className={styles.content_wrapper}>
             <div className={styles.audience_grid_row}>
                 <div className={styles.audience_card}>
@@ -115,13 +122,12 @@ export default function AboutPage() {
 
         <section className={styles.section_dark}>
             <div className={styles.container}>
-            <div className={styles.title_group}>
+            <div className={styles.center_title}>
                 <h2 className="text-2xl uppercase tracking-widest text-[#171717]">Як це працює</h2>
                 <span className={styles.underline}></span>
             </div>
 
             <div className={styles.steps_grid}>
-                {/* Шаг 1 */}
                 <div className={styles.step_item}>
                     <div className={styles.step_header}>
                         <div className={styles.number_wrapper}>
@@ -136,14 +142,13 @@ export default function AboutPage() {
                         <h4 className="font-medium text-lg mb-2">Створіть профіль</h4>
                         <p className="text-sm opacity-70">Зареєструйтесь та створіть свій перший досвід</p>
                     </div>
-                    </div>
+                </div>
 
-                    <div className={styles.arrow_container}>
+                <div className={styles.arrow_container}>
                     <div className={styles.long_arrow}></div>
-                    </div>
+                </div>
 
-                    {/* Шаг 2 */}
-                    <div className={styles.step_item}>
+                <div className={styles.step_item}>
                     <div className={styles.step_header}>
                         <div className={styles.number_wrapper}>
                         <span className={styles.step_number}>2</span>
@@ -157,14 +162,13 @@ export default function AboutPage() {
                         <h4 className="font-medium text-lg mb-2">Додавайте родичів</h4>
                         <p className="text-sm opacity-70">Заповнюйте історію про членів родини та їх життєву історію</p>
                     </div>
-                    </div>
+                </div>
 
-                    <div className={styles.arrow_container}>
+                <div className={styles.arrow_container}>
                     <div className={styles.long_arrow}></div>
-                    </div>
+                </div>
 
-                    {/* Шаг 3 */}
-                    <div className={styles.step_item}>
+                <div className={styles.step_item}>
                     <div className={styles.step_header}>
                         <div className={styles.number_wrapper}>
                         <span className={styles.step_number}>3</span>
@@ -178,8 +182,8 @@ export default function AboutPage() {
                         <h4 className="font-medium text-lg mb-2">Будуйте своє дерево</h4>
                         <p className="text-sm opacity-70">Візуалізуйте зв'язки та відкривайте історію вашого роду</p>
                     </div>
-                    </div>
                 </div>
+            </div>
             </div>
         </section>
 
@@ -187,12 +191,14 @@ export default function AboutPage() {
             <div className={styles.container}>
                 <div className={styles.cta_box}>
                     <div>
-                    <h2 className="text-2xl">Почніть свою історію вже сьогодні</h2>
+                    <h2 className="text-2xl mb-2">Почніть свою історію вже сьогодні</h2>
                     <p className="opacity-60">Збережіть те, що важливо для майбутніх поколінь.</p>
                     </div>
+                    <div className="mt-6 md:mt-0">
                     <Button href="/pages/registr" variant="outline">
                     Розпочати
                     </Button>
+                    </div>
                 </div>
             </div>
         </section>

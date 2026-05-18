@@ -9,7 +9,6 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Name and Family ID are required' }, { status: 400 });
         }
 
-        // ПЕРЕТВОРЕННЯ: Якщо стать 'Чоловіча', то 1 (true), інакше 0 (false)
         const genderBoolean = gender === 'Чоловіча' ? 1 : 0;
 
         const [result]: any = await db.query(

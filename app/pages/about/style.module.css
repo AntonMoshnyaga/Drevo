@@ -20,7 +20,6 @@
     color: var(--background);
 }
 
-/* Заголовки */
 .title_group {
     margin-bottom: 40px;
 }
@@ -41,7 +40,6 @@
     margin-bottom: 60px;
 }
 
-/* Hero секция */
 .hero_grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -69,7 +67,6 @@
     left: 0;
 }
 
-/* Секция возможностей с силуэтом */
 .features_about_grid {
     display: grid;
     grid-template-columns: 0.8fr 1.2fr;
@@ -94,7 +91,6 @@
     line-height: 1.6;
 }
 
-/* Сетка "Для кого" */
 .audience_grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -102,17 +98,38 @@
     text-align: center;
 }
 
+.content_wrapper {
+    display: flex;
+    align-items: flex-end; 
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.audience_grid_row {
+    display: flex;
+    flex: 2; 
+    justify-content: space-between;
+    gap: 15px;
+    padding-bottom: 40px; 
+}
+
 .audience_card {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+    max-width: 160px;
 }
 
-.cta_box {
+.audience_image_container {
+    flex: 1;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0; 
+    justify-content: flex-end;
+}
+
+.tree_img {
+    object-fit: contain;
+    margin-bottom: -100px; 
 }
 
 .steps_grid {
@@ -197,70 +214,101 @@
     color: #E4DFD6;
 }
 
-.title_group {
-    text-align: center;
-    margin-bottom: 60px;
-}
-
-.underline {
-    display: block;
-    width: 120px;
-    height: 2px;
-    background-color: #AD9561;
-    margin: 15px auto 0;
-}
-
-.content_wrapper {
-  display: flex;
-  align-items: flex-end; /* Выравнивание по нижней линии, так как дерево "растет" снизу */
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.audience_grid_row {
-  display: flex;
-  flex: 2; /* Занимает больше места */
-  justify-content: space-between;
-  gap: 15px;
-  padding-bottom: 40px; /* Приподнимаем карточки над уровнем корней дерева */
-}
-
-.audience_card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  max-width: 160px;
-}
-
-.audience_image_container {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.tree_img {
-  object-fit: contain;
-  /* Если нужно, чтобы дерево уходило в самый низ секции без паддингов */
-  margin-bottom: -100px; 
-}
-
-/* Адаптивность: на мобильных превращаем в колонку */
-@media (max-width: 1024px) {
-  .content_wrapper {
-    flex-direction: column;
+.cta_box {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-  }
-  
-  .audience_grid_row {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding-bottom: 20px;
-  }
+    margin: 0; 
+}
 
-  .tree_img {
-    margin-bottom: 0;
-    width: 300px;
-  }
+@media (max-width: 1024px) {
+    .content_wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .audience_grid_row {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-bottom: 20px;
+    }
+
+    .tree_img {
+        margin-bottom: 0;
+        width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 20px;
+    }
+
+    .section_light,
+    .section_dark {
+        padding: 60px 0;
+    }
+
+    .hero_grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+    }
+
+    .hero_content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero_content .title_group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero_list {
+        text-align: left;
+        display: inline-block;
+    }
+
+    .features_about_grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .features_content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .features_content .title_group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .audience_grid_row {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .steps_grid {
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+    }
+
+    .arrow_container {
+        display: none;
+    }
+
+    .cta_box {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
 }

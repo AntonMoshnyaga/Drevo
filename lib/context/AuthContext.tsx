@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import Cookies from 'js-cookie';
 
 interface User {
   id: number;
@@ -20,19 +21,22 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
-  // Перевіряємо localStorage при першому завантаженні
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) setUser(JSON.parse(savedUser));
   }, []);
 
-  const login = (userData: User) => {
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
-  };
+const login = (userData: User) => {
+  localStorage.setItem('user', JSON.stringify(userData));
+  
+  Cookies.set('auth-token', userData.id.toString(), { expires: 7 }); 
+  
+  setUser(userData);
+};
 
   const logout = () => {
     localStorage.removeItem('user');
+    Cookies.remove('auth-token');
     setUser(null);
   };
 

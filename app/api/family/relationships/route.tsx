@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import pool from '@/lib/db'; // Твоє підключення до MySQL
+import pool from '@/lib/db';
 
 export async function POST(request: Request) {
     try {
@@ -9,7 +9,6 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Відсутні ID для зв\'язку' }, { status: 400 });
         }
 
-        // Перевірка на існування такого зв'язку (Unique constraint)
         const [existing] = await pool.query(
             'SELECT * FROM relationships WHERE parent_id = ? AND child_id = ?',
             [parent_id, child_id]
@@ -19,7 +18,6 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Цей зв’язок уже існує' }, { status: 409 });
         }
 
-        // Вставка в базу даних
         await pool.query(
             'INSERT INTO relationships (parent_id, child_id, relation_type) VALUES (?, ?, ?)',
             [parent_id, child_id, relation_type || 'biological']
@@ -30,5 +28,30 @@ export async function POST(request: Request) {
     } catch (error) {
         console.error("Database error:", error);
         return NextResponse.json({ error: 'Помилка сервера' }, { status: 500 });
+    }
+}
+
+export async function DELETE(request: Request) {
+    try {
+        const { parent_id, child_id } = await request.json();
+
+        if (!parent_id || !child_id) {
+            return NextResponse.json({ error: 'Відсутні ID для видалення зв\'язку' }, { status: 400 });
+        }
+
+        const [result]: any = await pool.query(
+            'DELETE FROM relationships WHERE parent_id = ? AND child_id = ?',
+            [parent_id, child_id]
+        );
+
+        if (result.affectedRows === 0) {
+            return NextResponse.json({ error: 'Зв’язок не знайдено' }, { status: 404 });
+        }
+
+        return NextResponse.json({ success: true }, { status: 200 });
+
+    } catch (error) {
+        console.error("Database error during DELETE:", error);
+        return NextResponse.json({ error: 'Помилка сервера при видаленні' }, { status: 500 });
     }
 }

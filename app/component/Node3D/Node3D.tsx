@@ -4,11 +4,10 @@ import React, { useRef, useState, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Sphere, Text, Image as DreiImage, MeshDistortMaterial, Billboard } from '@react-three/drei';
 import * as THREE from 'three';
-import { useDrag } from '@use-gesture/react'; // Додаємо імпорт
+import { useDrag } from '@use-gesture/react';
 
-// 1. Оновлений інтерфейс
 interface Node3DProps {
-    id: string; // Обов'язково додаємо ID для ідентифікації при перетягуванні
+    id: string;
     position: [number, number, number];
     label: string;
     photo_url?: string | null;
@@ -24,7 +23,6 @@ export function Node3D({ id, position, label, photo_url, gender, birth_date, onC
     const meshRef = useRef<THREE.Mesh>(null);
     const [hovered, setHovered] = useState(false);
 
-    // Отримуємо параметри камери та екрану для правильного прорахунку координат
     const { viewport, size } = useThree();
     const aspect = viewport.width / size.width;
 
@@ -36,7 +34,6 @@ export function Node3D({ id, position, label, photo_url, gender, birth_date, onC
 
     const displayDate = birth_date ? birth_date.slice(0, 10) : '';
 
-    // Логіка перетягування
     const bind = useDrag(({ movement: [mx, my], last, first, event }) => {
         event.stopPropagation();
 
@@ -44,10 +41,9 @@ export function Node3D({ id, position, label, photo_url, gender, birth_date, onC
             onNodeDragStart();
         }
         
-        // Оновлюємо стейт лише коли користувач відпустив кнопку миші
         if (last && onNodeDrag) {
             const newX = position[0] + (mx * aspect);
-            const newY = position[1] - (my * aspect); // мінус, бо вісь Y в 3D інвертована
+            const newY = position[1] - (my * aspect); 
             onNodeDrag(id, newX, newY);
         }
     });
@@ -55,9 +51,7 @@ export function Node3D({ id, position, label, photo_url, gender, birth_date, onC
     useFrame((state) => {
         const time = state.clock.elapsedTime;
         if (groupRef.current) {
-            // Плавання буде працювати навколо нової позиції position[1]
             groupRef.current.position.y = position[1] + Math.sin(time + position[0]) * 0.1;
-            // Оновлюємо X також, на випадок якщо ми його перетягнули
             groupRef.current.position.x = position[0]; 
         }
         if (meshRef.current && hovered) {
@@ -66,7 +60,6 @@ export function Node3D({ id, position, label, photo_url, gender, birth_date, onC
     });
 
     return (
-        // 2. Додаємо {...bind()} до головної групи
         <group ref={groupRef} position={position} {...bind()}>
             <Sphere 
                 ref={meshRef} 

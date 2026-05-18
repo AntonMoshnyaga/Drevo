@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Drevo 🌳 — Інтерактивне Генеалогічне Дерево
 
-## Getting Started
+**Drevo** — це сучасна веб-платформа для візуалізації, побудови та керування родинними зв'язками. Проєкт поєднує класичну двовимірну графіку з тривимірним простором, дозволяючи користувачам досліджувати свою історію під будь-яким кутом.
 
-First, run the development server:
+Зручний інтерфейс із глибоким темно-зеленим та золотавим дизайном створює атмосферу справжнього архівного дослідження, але з потужними технологіями під капотом.
 
-```bash
+---
+
+## ✨ Ключові можливості
+
+*   **2D Візуалізація (ReactFlow):** Інтерактивна пласка мапа дерева з підтримкою масштабування, перетягування та динамічного створення зв'язків (Drag-and-Drop).
+*   **Автоматичний Лейаут (Dagre Graph):** Вам не потрібно вручну розставляти картки родичів — алгоритм автоматично вираховує оптимальні позиції рівнів (батьки, діти, предки) без перетинів.
+*   **3D Режим (Three.js / React Three Fiber):** Можливість перемкнути дерево у тривимірний простір, де вузли стають об'ємними сферами, а зв'язки — лініями у просторі з підтримкою OrbitControls.
+*   **Керування родичами:** Повна інтеграція з API для додавання, редагування, завантаження фотографій та видалення членів родини через контекстні сайдбари.
+*   **Розумні зв'язки:** Захист від створення циклічних зв'язків (наприклад, коли дитина стає батьком власного предка) на рівні фронтенду та бекенду.
+
+---
+
+## 🛠️ Технологічний стек
+
+*   **Фреймворк:** [Next.js (App Router)](https://nextjs.org/) (React 18+, TypeScript)
+*   **2D Графіка:** [ReactFlow](https://reactflow.dev/)
+*   **3D Графіка:** [React Three Fiber](https://docs.pmnd.rs/react-three-fiber) & [Three.js](https://threejs.org/)
+*   **Розрахунок графів:** [Dagre](https://github.com/dagrejs/dagre) (автоматичне позиціонування вузлів)
+*   **Контейнеризація:** [Docker](https://www.docker.com/) & Docker Compose (ізоляція середовищ розробки/продакшну, multi-stage збірка для мінімізації образів)
+*   **Стилізація:** CSS Modules (ізольовані стилі для кожного компонента)
+
+---
+
+## 🛠️ Запуск проєкту
+
+* ## 🛠️ Запуск проєкту
+*   Ви можете запустити проєкт **Drevo** двома способами: локально за допомогою Node.js або у повністю ізольованому середовищі за допомогою Docker.
+1. **Клонування репозиторію:**
+   ```bash
+   git clone [https://github.com/your-username/drevo.git](https://github.com/your-username/drevo.git)
+   cd drevo
+Встановлення залежностей:
+
+npm install
+Налаштування змінних оточення:
+Створіть файл .env.local у корені проєкту та додайте конфігурацію:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Після цього відкрийте http://localhost:3000 у своєму браузері.

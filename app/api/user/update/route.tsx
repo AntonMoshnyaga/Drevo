@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
-import bcrypt from 'bcryptjs'; // Якщо ви шифруєте паролі
+import bcrypt from 'bcryptjs';
 
 export async function PUT(req: Request) {
     try {
@@ -10,11 +10,9 @@ export async function PUT(req: Request) {
             return NextResponse.json({ error: 'ID користувача обов’язковий' }, { status: 400 });
         }
 
-        // 1. Починаємо формувати запит
         let query = "UPDATE accounts SET name = ?, email = ?, photo_url = ?";
         let params = [name, email, avatar];
 
-        // 2. Якщо пароль передано (не порожній), додаємо його до оновлення
         if (password && password.trim() !== "") {
             const hashedPassword = await bcrypt.hash(password, 10);
             query += ", password = ?";

@@ -5,27 +5,43 @@
     flex-direction: column;
     align-items: center;
     padding: 40px 20px;
+    box-sizing: border-box;
 }
 
 .main_content {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Центрирует все дочерние элементы по горизонтали */
+    align-items: center;
     width: 100%;
-    padding: 20px;
+    max-width: 1200px;
+    padding: 20px 0;
 }
 
 .header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
+    text-align: center;
+    width: 100%;
+}
+
+.logo_wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo_img {
+    height: auto;
+    max-width: 100%;
 }
 
 .welcome_text {
     font-size: 24px;
     color: #171717;
-    margin-top: 20px;
+    margin-top: 15px;
+    padding: 0 10px;
 }
 
 .underline {
@@ -38,7 +54,7 @@
 .search_container {
     width: 100%;
     max-width: 500px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .search_wrapper {
@@ -47,6 +63,7 @@
     border-radius: 30px;
     background-color: transparent;
     overflow: hidden;
+    width: 100%;
 }
 
 .search_input {
@@ -55,7 +72,8 @@
     border: none;
     background: transparent;
     outline: none;
-    font-size: 18px;
+    font-size: 16px;
+    color: #171717;
 }
 
 .search_button {
@@ -66,34 +84,56 @@
     cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .search_button:hover {
-    opacity: 0.7;
+    opacity: 0.8;
     transition: opacity 0.2s ease;
+}
+
+.actions_container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 40px;
 }
 
 .add_family_btn {
     background-color: #202E2B;
     color: #AD9561;
     border: 1px solid #AD9561;
-    padding: 12px 40px;
+    padding: 14px 40px;
     cursor: pointer;
-    font-size: 18px;
-    margin-bottom: 40px; /* Отступ перед плитками */
-    width: fit-content; /* Чтобы кнопка не растягивалась во всю ширину */
+    font-size: 16px;
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+    border-radius: 4px;
+    transition: background-color 0.2s, opacity 0.2s;
 }
 
 .add_family_btn:hover {
     opacity: 0.9;
+    background-color: #16201e;
 }
 
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
+    gap: 30px;
     width: 100%;
-    max-width: 1000px;
+}
+
+.loading_state {
+    grid-column: 1 / -1;
+    font-size: 18px;
+    color: #202E2B;
+    text-align: center;
+    padding: 40px 0;
 }
 
 .modal_overlay {
@@ -102,31 +142,34 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.6); /* Напівпрозорий темний фон */
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(4px);
+    padding: 16px;
+    box-sizing: border-box;
 }
 
 .modal_content {
-    background-color: #202E2B; /* Темно-зелений колір Drevo */
-    padding: 40px 50px;
-    border-radius: 4px;
+    background-color: #202E2B;
+    padding: 40px 45px;
+    border-radius: 8px;
     width: 100%;
-    max-width: 450px;
+    max-width: 420px;
     display: flex;
     flex-direction: column;
     align-items: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
 }
 
 .modal_title {
-    color: #AD9561; /* Золотистий колір */
-    font-size: 22px;
+    color: #AD9561;
+    font-size: 20px;
     font-weight: 500;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     text-align: center;
 }
 
@@ -134,7 +177,7 @@
     width: 60%;
     height: 2px;
     background-color: #AD9561;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .modal_input {
@@ -145,18 +188,19 @@
     padding: 12px 20px;
     color: #E4DFD6;
     font-size: 16px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     outline: none;
     transition: box-shadow 0.2s;
+    box-sizing: border-box;
 }
 
 .modal_input::placeholder {
     color: #E4DFD6;
-    opacity: 0.7;
+    opacity: 0.6;
 }
 
 .modal_input:focus {
-    box-shadow: 0 0 8px rgba(173, 149, 97, 0.4);
+    box-shadow: 0 0 8px rgba(173, 149, 97, 0.5);
 }
 
 .modal_submit_btn {
@@ -165,52 +209,103 @@
     border: 1px solid #AD9561;
     padding: 14px;
     color: white;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
+    border-radius: 25px;
     transition: background-color 0.2s;
 }
 
 .modal_submit_btn:hover:not(:disabled) {
-    background-color: rgba(173, 149, 97, 0.1);
+    background-color: rgba(173, 149, 97, 0.15);
 }
 
 .modal_submit_btn:disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
 }
 
 .empty_state {
-    grid-column: 1 / -1; /* Займає всю ширину сітки (якщо grid) */
+    grid-column: 1 / -1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 60px 20px;
+    padding: 40px 20px;
     text-align: center;
-    background-color: rgba(32, 46, 43, 0.03); /* Дуже легкий відтінок фону */
-    border: 2px dashed #AD9561; /* Пунктирна золотиста рамка */
+    background-color: rgba(32, 46, 43, 0.03);
+    border: 2px dashed #AD9561;
     border-radius: 20px;
-    margin-top: 20px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .empty_title {
     color: #202E2B;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .empty_text {
     color: #171717;
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.5;
-    max-width: 400px;
-    margin-bottom: 25px;
+    max-width: 350px;
     opacity: 0.7;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .page_container {
+        padding: 20px 15px;
+    }
+
+    .welcome_text {
+        font-size: 20px;
+    }
+
+    .logo_img {
+        width: 110px;
+        height: 110px;
+    }
+
     .grid {
         grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .actions_container {
+        margin-bottom: 25px;
+    }
+
+    .add_family_btn {
+        max-width: 100%;
+        font-size: 15px;
+        padding: 12px 20px;
+    }
+
+    .modal_content {
+        padding: 30px 20px;
+    }
+    
+    .modal_title {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 400px) {
+    .search_input {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+    
+    .search_button {
+        padding: 0 15px;
     }
 }

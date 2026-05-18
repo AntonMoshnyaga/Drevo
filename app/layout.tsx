@@ -32,7 +32,6 @@ export default function RootLayout({
       >
         <AuthProvider>
           <body className="min-h-full flex flex-col bg-[var(--background)]">
-            {/* Огортаємо ВСЕ, що знаходиться в body */}
             <Header />
             <main className="flex-grow">
               {children}

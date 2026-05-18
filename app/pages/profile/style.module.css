@@ -5,41 +5,12 @@
   background-color: #E4DFD6;
 }
 
-.header, .footer {
-  background-color: #202E2B;
-  color: white;
-  padding: 15px 40px;
-}
-
-.header_content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.header_links {
-  display: flex;
-  gap: 40px;
-  align-items: center;
-}
-
-.nav_btn {
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
-}
-
 .main {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px;
+  padding: 40px 20px;
 }
 
 .profile_card {
@@ -48,87 +19,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .avatar_container {
   position: relative;
   margin-bottom: 30px;
-}
-
-.editable_avatar {
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.editable_avatar:hover {
-  opacity: 0.8; /* Легкое затемнение, чтобы показать, что элемент кликабелен */
-}
-
-.avatar_image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Картинка заполняет квадрат без искажения пропорций */
-}
-
-.edit_icon {
-  position: absolute;
-  top: 0;
-  right: -40px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #171717;
-}
-
-.form_group {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.input {
-  width: 100%;
-  padding: 12px 24px;
-  border: 1px solid #AD9561;
-  border-radius: 30px;
-  background-color: #E4DFD6;
-  font-size: 16px;
-  color: #171717;
-}
-
-.input:disabled {
-  opacity: 0.7;
-  cursor: default;
-}
-
-.button_group {
-  display: flex;
-  gap: 20px;
-  margin-top: 30px;
-  width: 100%;
-}
-
-.save_btn, .cancel_btn {
-  flex: 1;
-  padding: 12px;
-  border: 1px solid #AD9561;
-  background-color: #202E2B;
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.footer {
-  text-align: center;
-  font-size: 14px;
-}
-
-.avatar_container {
-  position: relative;
-  margin-bottom: 30px;
-  /* Добавлено inline-flex, чтобы контейнер плотно облегал квадрат */
   display: inline-flex; 
 }
 
@@ -140,30 +36,192 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  /* Убран rotate из самого блока, чтобы квадрат стоял ровно */
+  border-radius: 50%;
+  position: relative;
 }
 
 .avatar_placeholder span {
   font-size: 22px;
   color: white;
   white-space: nowrap;
-  transform: rotate(-45deg); /* Текст повернут по диагонали */
+  transform: rotate(-45deg);
+}
+
+.avatar_image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.editable_avatar {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.editable_avatar:hover {
+  opacity: 0.9;
+}
+
+.avatar_overlay {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 14px;
 }
 
 .edit_icon {
   position: absolute;
-  top: -10px; /* Смещаем чуть выше верхнего края */
-  right: -35px; /* Выносим за пределы правого края */
-  background: none;
-  border: none;
+  bottom: 0;
+  right: 0;
+  background: #E4DFD6;
+  border: 1px solid #AD9561;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 5px;
-  transition: opacity 0.2s;
+  padding: 0;
+  transition: transform 0.2s, background-color 0.2s;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .edit_icon:hover {
+  transform: scale(1.05);
+  background-color: #dbd4c8;
+}
+
+.form_group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input_wrapper {
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 24px;
+  border: 1px solid #AD9561;
+  border-radius: 30px;
+  background-color: #E4DFD6;
+  font-size: 16px;
+  color: #171717;
+  box-sizing: border-box;
+}
+
+.input:disabled {
   opacity: 0.7;
+  cursor: default;
+}
+
+.edit_actions_container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button_group {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  width: 100%;
+}
+
+.save_btn, .cancel_btn {
+  flex: 1;
+  padding: 14px;
+  border: 1px solid #AD9561;
+  background-color: #202E2B;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 4px;
+  transition: opacity 0.2s;
+}
+
+.save_btn:hover, .cancel_btn:hover {
+  opacity: 0.9;
+}
+
+.save_btn:disabled, .cancel_btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.delete_section {
+  width: 100%;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #AD9561;
+  text-align: center;
+}
+
+.delete_btn {
+  color: #ff4d4f;
+  background-color: #202E2B;
+  border: 1px solid #AD9561;
+  padding: 12px 24px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+  transition: all 0.2s;
+  width: 100%;
+  max-width: 250px;
+  border-radius: 4px;
+}
+
+.delete_btn:hover:not(:disabled) {
+  background-color: #ff4d4f;
+  color: #fff;
+  border-color: #ff4d4f;
+}
+
+.delete_btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 20px 15px;
+  }
+
+  .avatar_placeholder {
+    width: 130px;
+    height: 130px;
+  }
+
+  .input {
+    padding: 12px 20px;
+    font-size: 15px;
+  }
+
+  .button_group {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .save_btn, .cancel_btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .delete_btn {
+    max-width: 100%;
+    font-size: 14px;
+  }
 }

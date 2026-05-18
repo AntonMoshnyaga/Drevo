@@ -6,7 +6,6 @@ export default function Home() {
   return (
     <main className={styles.main}>
       
-      {/* SECTION 1: HERO */}
       <section className={styles.section_light}>
         <div className={styles.container}>
           <div className={styles.hero_grid}>
@@ -31,7 +30,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SECTION 2: POSSIBILITIES */}
       <section className={styles.section_dark}>
         <div className={styles.container}>
           <div className={styles.title_group}>
@@ -44,7 +42,7 @@ export default function Home() {
               { 
                 title: "Створюйте дерево", 
                 desc: "Додайте членів родини та будуйте своє сімейне дерево легко та зручно",
-                icon: "/person.svg" // Путь к иконке
+                icon: "/person.svg"
               },
               { 
                 title: "Зберігайте історію", 
@@ -80,7 +78,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SECTION 3: HOW IT WORKS */}
       <section className={styles.section_light}>
         <div className={styles.container}>
           <div className={styles.title_group}>
@@ -89,7 +86,6 @@ export default function Home() {
           </div>
 
           <div className={styles.steps_grid}>
-            {/* Шаг 1 */}
             <div className={styles.step_item}>
               <div className={styles.step_header}>
                 <div className={styles.number_wrapper}>
@@ -110,7 +106,6 @@ export default function Home() {
               <div className={styles.long_arrow}></div>
             </div>
 
-            {/* Шаг 2 */}
             <div className={styles.step_item}>
               <div className={styles.step_header}>
                 <div className={styles.number_wrapper}>
@@ -131,7 +126,6 @@ export default function Home() {
               <div className={styles.long_arrow}></div>
             </div>
 
-            {/* Шаг 3 */}
             <div className={styles.step_item}>
               <div className={styles.step_header}>
                 <div className={styles.number_wrapper}>

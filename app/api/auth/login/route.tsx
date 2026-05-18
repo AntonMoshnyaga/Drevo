@@ -10,7 +10,6 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: 'Заповніть всі поля' }, { status: 400 });
     }
 
-    // Пошук користувача за email або іменем (згідно з вашим лейблом у формі)
     const [rows]: any = await pool.query(
         'SELECT * FROM accounts WHERE email = ? OR name = ?',
         [identifier, identifier]
@@ -22,14 +21,12 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: 'Користувача не знайдено' }, { status: 401 });
     }
 
-    // Перевірка пароля
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
         return NextResponse.json({ message: 'Невірний пароль' }, { status: 401 });
     }
 
-    // Тут зазвичай створюється сесія або JWT-токен
     return NextResponse.json({ 
         message: 'Вхід успішний',
         user: { id: user.id, name: user.name, email: user.email, photo_url: user.photo_url } 

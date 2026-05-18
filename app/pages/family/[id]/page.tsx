@@ -1,21 +1,25 @@
 'use client';
 
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { useParams } from 'next/navigation';
-import ReactFlow, { applyNodeChanges, OnNodesChange, Background, Controls, Node, Edge, addEdge, Connection } from 'reactflow';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { useParams, useRouter } from 'next/navigation';
+import { applyNodeChanges, OnNodesChange, Node, Edge, addEdge, Connection } from 'reactflow';
 import 'reactflow/dist/style.css';
-import Image from 'next/image';
+
 import styles from './style.module.css';
-import { Node3D } from '../../../component/Node3D/Node3D';
 import Node2D from '../../../component/Node2D/Node2D';
-import Edge3D from '../../../component/Edge3D/Edge3D';
+import CustomModal from '@/app/component/CustomModal/CustomModal';
+
+import { getLayoutedElements } from '../../../utils/layout';
+import LeftSidebar from '../../../component/LeftSidebar/LeftSidebar';
+import RightSidebar from '../../../component/RightSidebar/RightSidebar';
+import TreeView2D from '../../../component/TreeView2D/TreeView2D';
+import TreeView3D from '../../../component/TreeView3D/TreeView3D';
 
 export default function FamilyPage() {
     const params = useParams();
     const familyId = params.id;
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const router = useRouter();
 
     const [nodes, setNodes] = useState<Node[]>([]);
     const [edges, setEdges] = useState<Edge[]>([]);
@@ -29,9 +33,10 @@ export default function FamilyPage() {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({ name: '', gender: 'Чоловіча', birthDate: '', deathDate: '', photoUrl: '' });
     const [searchQuery, setSearchQuery] = useState('');
-    const nodeTypes = useMemo(() => ({
-        familyNode: Node2D // Переконайтеся, що в processedNodes тип вказаний саме як 'familyNode'
-    }), []);
+
+    const [modalConfig, setModalConfig] = useState<{ isOpen: boolean; title: string; message: string } | null>(null);
+
+    const nodeTypes = useMemo(() => ({ familyNode: Node2D }), []);
 
     const onNodesChange: OnNodesChange = useCallback(
         (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -42,57 +47,44 @@ export default function FamilyPage() {
         setNodes((nds) =>
             nds.map((node) => {
                 if (node.id === id) {
-                    return {
-                        ...node,
-                        position: { x: newX * 100, y: -newY * 100 },
-                    };
+                    return { ...node, position: { x: newX * 100, y: -newY * 100 } };
                 }
                 return node;
             })
         );
-        // Когда движение окончено, разрешаем камере снова двигаться
         setIsDragging(false);
     }, [setNodes]);
 
+    const showModal = (title: string, message: string) => {
+        setModalConfig({ isOpen: true, title, message });
+    };
+
     const handleSearch = () => {
         if (!searchQuery.trim()) return;
-        
-        // Шукаємо член родини без урахування регістру
-        const foundNode = nodes.find(node => 
-            node.data.label.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-
+        const foundNode = nodes.find(node => node.data.label.toLowerCase().includes(searchQuery.toLowerCase()));
         if (foundNode) {
-            onNodeClick(null, foundNode); // Відкриваємо інфо в правому сайдбарі
-            setSearchQuery(''); // Очищаємо поле (опціонально)
+            onNodeClick(null, foundNode);
+            setSearchQuery('');
         } else {
-            alert('Члена родини не знайдено');
+            showModal("Помилка", "Члена родини не знайдено");
         }
     };
 
     const onConnect = useCallback(async (params: Connection) => {
         const { source, target } = params;
-
-        // 1. Базова валідація
         if (source === target) return; 
 
-        // Перевірка на циклічність (дитина не може бути батьком власного батька)
         const isCyclic = edges.some(edge => edge.source === target && edge.target === source);
         if (isCyclic) {
-            alert("Помилка: неможливо створити циклічний зв'язок!");
+            showModal("Помилка", "Помилка: неможливо створити циклічний зв'язок!");
             return;
         }
 
         try {
-            // 2. Запит до API
             const response = await fetch('/api/family/relationships', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    parent_id: source,
-                    child_id: target,
-                    relation_type: 'biological' 
-                })
+                body: JSON.stringify({ parent_id: source, child_id: target, relation_type: 'biological' })
             });
 
             if (!response.ok) {
@@ -100,7 +92,6 @@ export default function FamilyPage() {
                 throw new Error(error.error || "Server error");
             }
 
-            // 3. Візуальне оновлення графа
             setEdges((eds) => addEdge({
                 ...params,
                 id: `e-${source}-${target}`, 
@@ -108,10 +99,9 @@ export default function FamilyPage() {
                 animated: true,
                 style: { stroke: '#AD9561', strokeWidth: 2 }
             }, eds));
-            
         } catch (error: any) {
             console.error("Помилка створення зв'язку:", error);
-            alert(error.message || "Не вдалося зберегти зв'язок.");
+            showModal("Помилка", error.message || "Не вдалося зберегти зв'язок.");
         }
     }, [edges, setEdges]);
 
@@ -122,16 +112,12 @@ export default function FamilyPage() {
 
     const handleDeleteMember = async () => {
         if (!selectedMember?.id) return;
-        
         if (!window.confirm(`Видалити ${selectedMember.label}?`)) return;
 
         try {
             const response = await fetch('/api/family/delete', {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                // Передаємо ID у форматі JSON
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: selectedMember.id })
             });
 
@@ -146,26 +132,55 @@ export default function FamilyPage() {
         }
     };
 
+    const onEdgeClick = useCallback(async (event: React.MouseEvent, edge: Edge) => {
+        event.stopPropagation();
+        if (!window.confirm("Ви дійсно хочете видалити цей зв'язок?")) return;
+
+        try {
+            const response = await fetch('/api/family/relationships', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ parent_id: edge.source, child_id: edge.target })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Не вдалося видалити зв'язок на сервері");
+            }
+
+            setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+        } catch (error: any) {
+            console.error("Помилка видалення:", error);
+            showModal("Помилка", error.message || "Сталася помилка при видаленні зв'язку.");
+        }
+    }, [setEdges]);
+
     const fetchTree = useCallback(async () => {
+        if (!familyId) return;
+        setLoading(true);
         try {
             const res = await fetch(`/api/family/tree?familyId=${familyId}`);
-            const data = await res.json();
-            if (res.ok) {
-                setNodes(data.nodes);
-                setEdges(data.edges);
+            if (res.status === 403) {
+                router.push('/pages/main');
+                return;
             }
+            if (!res.ok) throw new Error('Помилка завантаження');
+
+            const data = await res.json();
+            const { layoutedNodes, layoutedEdges } = getLayoutedElements(data.nodes || [], data.edges || []);
+            setNodes(layoutedNodes);
+            setEdges(layoutedEdges);
         } catch (err) {
-            console.error("Помилка завантаження", err);
+            console.error("Помилка завантаження:", err);
         } finally {
             setLoading(false);
         }
-    }, [familyId]);
+    }, [familyId, router]); 
 
     useEffect(() => {
-        if (familyId) fetchTree();
-    }, [familyId, fetchTree]);
+        fetchTree();
+    }, [fetchTree]);
 
-    // Логіка завантаження фото (конвертація в Base64 для простоти збереження)
     const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -186,8 +201,6 @@ export default function FamilyPage() {
 
     const handleEditClick = () => {
         if (!selectedMember) return;
-        
-        // Заповнюємо форму існуючими даними
         setFormData({
             name: selectedMember.label || '',
             gender: selectedMember.gender === 1 ? 'Чоловіча' : 'Жіноча',
@@ -195,23 +208,18 @@ export default function FamilyPage() {
             deathDate: selectedMember.death_date || '',
             photoUrl: selectedMember.photo_url || ''
         });
-        
         setIsEditing(true);
     };
 
     const handleSaveMember = async () => {
-        if (!formData.name) return alert("Вкажіть ім'я");
+        if (!formData.name) {
+            showModal("Помилка", "Вкажіть ім'я");
+            return;
+        }
         
-        // Визначаємо URL та метод залежно від того, додаємо ми чи редагуємо
         const endpoint = isEditing ? '/api/family/member/update' : '/api/family/member/create';
         const method = isEditing ? 'PUT' : 'POST';
-        
-        // Якщо редагуємо, обов'язково передаємо ID людини
-        const payload = isEditing 
-            ? { ...formData, id: selectedMember.id, familyId } 
-            : { ...formData, familyId };
-
-            console.log("Відправляємо дані:", payload);
+        const payload = isEditing ? { ...formData, id: selectedMember.id, familyId } : { ...formData, familyId };
 
         try {
             const res = await fetch(endpoint, {
@@ -221,273 +229,87 @@ export default function FamilyPage() {
             });
 
             const data = await res.json();
-            
             if (res.ok) {
                 setIsAdding(false);
                 setIsEditing(false);
-                fetchTree(); // Оновлюємо дерево
+                fetchTree();
             } else {
-                alert(`Помилка: ${data.message || 'Невідома помилка'}`);
+                showModal("Помилка", `Помилка: ${data.message || 'Невідома помилка'}`);
             }
         } catch (err) {
             console.error(err);
-            alert("Помилка з'єднання");
+            showModal("Помилка", "Помилка з'єднання");
         }
     };
 
     const processedNodes = useMemo(() => {
-        return nodes.map((node) => ({
-            ...node,
-            type: 'familyNode',
-        }));
+        return nodes.map((node) => ({ ...node, type: 'familyNode' }));
     }, [nodes]);
 
     if (loading) return <div className={styles.loader}>Вирощуємо дерево...</div>;
 
     return (
         <div className={`${styles.page_layout} ${!isSidebarOpen ? styles.sidebar_closed : ''}`}>
-            {/* Лівий сайдбар */}
-            <aside className={styles.sidebar_left}>
-                <div className={styles.logo_box}>
-                    <div className={styles.burger_black} onClick={() => setIsSidebarOpen(!isSidebarOpen)}>☰</div>
-                </div>
-                
-                <div className={styles.controls_group}>
-                    
-                    <div className={styles.search_block}>
-                        <input 
-                            type="text" 
-                            placeholder="Знайти ім'я..." 
-                            className={styles.themed_input}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                        />
-                        <button className={styles.themed_btn} onClick={handleSearch} style={{ width: '100%' }}>
-                            Знайти
-                        </button>
-                    </div>
+            
+            {isSidebarOpen && (
+                <div 
+                    className={styles.mobile_backdrop} 
+                    onClick={() => setIsSidebarOpen(false)} 
+                />
+            )}
 
-                    <button className={styles.themed_btn} onClick={() => { setIsAdding(true); setIsSidebarOpen(true); setSelectedMember(null); }} style={{ width: '100%' }}>
-                        Додати
-                    </button>
-                    <button className={styles.themed_btn} onClick={() => setViewMode(prev => prev === '2D' ? '3D' : '2D')} style={{ width: '100%' }}>
-                        {viewMode === '2D' ? '3D Вигляд' : '2D Вигляд'}
-                    </button>
+            <LeftSidebar 
+                isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen}
+                searchQuery={searchQuery} setSearchQuery={setSearchQuery} handleSearch={handleSearch}
+                setIsAdding={setIsAdding} setSelectedMember={setSelectedMember}
+                viewMode={viewMode} setViewMode={setViewMode} selectedMember={selectedMember}
+                handleEditClick={handleEditClick} handleDeleteMember={handleDeleteMember}
+                edges={edges} getPersonName={getPersonName}
+            />
 
-                    {!isAdding && !isEditing && selectedMember && (
-                        <div className={styles.action_buttons}>
-                            <button className={styles.themed_btn} onClick={handleEditClick}>Редагувати</button>
-                            <button 
-                                className={styles.themed_btn} 
-                                style={{ background: '#7a2020', borderColor: '#ff4d4d', color: 'white' }} 
-                                onClick={handleDeleteMember}
-                            >
-                                Видалити
-                            </button>
-                        </div>
-                    )}
-
-                    <div className={styles.connections_block}>
-                        <h4 className={styles.themed_title_small}>Зв'язки</h4>
-                        
-                        <ul className={styles.connections_list}>
-                            {edges.length > 0 ? (
-                                edges.map((edge: any, index) => { // Используем any для обхода строгой проверки типа Edge
-                                    const sourceId = edge.source || edge.parent_id;
-                                    const targetId = edge.target || edge.child_id;
-                                    const relType = edge.relation_type || edge.data?.type || 'Зв’язок';
-
-                                    return (
-                                        <li key={index} className={styles.connection_item}>
-                                            <strong>{getPersonName(sourceId)}</strong> 
-                                            <span className={styles.relation_arrow}> → </span> 
-                                            <strong>{getPersonName(targetId)}</strong>
-                                            <div className={styles.relation_type}>{relType}</div>
-                                        </li>
-                                    );
-                                })
-                            ) : (
-                                <li className={styles.empty_text}>Немає зв'язків</li>
-                            )}
-                        </ul>
-                    </div>
-                    
-                </div>
-            </aside>
-
-            {/* Основна область */}
             <main className={styles.tree_area}>
+                {!isSidebarOpen && (
+                    <button 
+                        className={styles.floating_burger} 
+                        onClick={() => setIsSidebarOpen(true)}
+                    >
+                        ☰
+                    </button>
+                )}
+                
                 <div className={styles.canvas_wrapper}>
                     {viewMode === '2D' ? (
-                    <ReactFlow 
-                        nodes={processedNodes} 
-                        edges={edges} 
-                        onNodesChange={onNodesChange}
-                        onNodeClick={onNodeClick} 
-                        onConnect={onConnect}
-                        nodeTypes={nodeTypes}
-                        fitView
-                    >
-                        <Background color="#AD9561" gap={20} />
-                        <Controls />
-                    </ReactFlow>
+                        <TreeView2D 
+                            processedNodes={processedNodes} edges={edges} nodeTypes={nodeTypes}
+                            onNodesChange={onNodesChange} onNodeClick={onNodeClick}
+                            onConnect={onConnect} onEdgeClick={onEdgeClick}
+                        />
                     ) : (
-                    <Canvas camera={{ position: [0, 0, 10] }}>
-                        <ambientLight intensity={0.8} />
-                        <pointLight position={[10, 10, 10]} />
-                        <OrbitControls makeDefault enabled={!isDragging} />
-                        
-                        {/* 1. Відмальовуємо зв'язки (лінії) */}
-                        {edges.map((edge) => {
-                            // Шукаємо координати батька та дитини саме в processedNodes
-                            const sourceNode = processedNodes.find(n => String(n.id) === String(edge.source));
-                            const targetNode = processedNodes.find(n => String(n.id) === String(edge.target));
-
-                            // Якщо якогось вузла немає, пропускаємо лінію
-                            if (!sourceNode || !targetNode) return null;
-
-                            // Конвертуємо координати так само, як і для 3D вузлів
-                            const startPosition: [number, number, number] = [sourceNode.position.x / 100, -sourceNode.position.y / 100, 0];
-                            const endPosition: [number, number, number] = [targetNode.position.x / 100, -targetNode.position.y / 100, 0];
-
-                            return (
-                                <Edge3D 
-                                    key={edge.id || `edge-${edge.source}-${edge.target}`} 
-                                    start={startPosition} 
-                                    end={endPosition} 
-                                />
-                            );
-                        })}
-
-                        {/* 2. Відмальовуємо самі вузли (сфери/картки) */}
-                        {processedNodes.map((node) => ( // ЗМІНЕНО: nodes -> processedNodes
-                            <Node3D 
-                                key={node.id} 
-                                id={node.id}
-                                position={[node.position.x / 100, -node.position.y / 100, 0]} 
-                                label={node.data.label}
-                                photo_url={node.data.photo_url} 
-                                gender={node.data.gender === 1 ? 'Чоловіча' : 'Жіноча'}
-                                birth_date={node.data.birth_date}
-                                onClick={() => onNodeClick(null, node as any)}
-                                onNodeDragStart={() => setIsDragging(true)} 
-                                onNodeDrag={handle3DNodeDrag}
-                            />
-                        ))}
-                    </Canvas>
+                        <TreeView3D 
+                            processedNodes={processedNodes} edges={edges} isDragging={isDragging}
+                            setIsDragging={setIsDragging} handle3DNodeDrag={handle3DNodeDrag} onNodeClick={onNodeClick}
+                        />
                     )}
                 </div>
             </main>
 
-            {/* Правий сайдбар */}
             {isSidebarOpen && (
-                <aside className={styles.sidebar_right}>
-                    <div className={styles.info_header}>
-                            <div className={styles.burger_black} onClick={() => setIsSidebarOpen(false)}>☰</div>
-                            <h3 className={styles.themed_title}>
-                                {isAdding ? 'Новий родич' : isEditing ? 'Редагування' : 'Інфо'}
-                            </h3>
-                            
-                            {/* Кнопка редагування показується тільки якщо це режим "Інфо" і обрано людину */}
-                            {!isAdding && !isEditing && selectedMember && (
-                                <Image 
-                                    src="/edit.svg" 
-                                    alt="Edit" 
-                                    width={20} 
-                                    height={20} 
-                                    className={styles.themed_icon} 
-                                    onClick={handleEditClick} 
-                                />
-                            )}
-                        </div>
+                <RightSidebar 
+                    isAdding={isAdding} isEditing={isEditing} setIsAdding={setIsAdding} setIsEditing={setIsEditing}
+                    selectedMember={selectedMember} handleEditClick={handleEditClick}
+                    formData={formData} setFormData={setFormData} fileInputRef={fileInputRef}
+                    handlePhotoUpload={handlePhotoUpload} handleSaveMember={handleSaveMember} setIsSidebarOpen={setIsSidebarOpen}
+                />
+            )}
 
-                        <div className={styles.photo_section}>
-                                {/* Фото можна змінювати як при додаванні, так і при редагуванні */}
-                                {(isAdding || isEditing) ? (
-                                    <div className={styles.photo_upload_area} onClick={() => fileInputRef.current?.click()}>
-                                        {formData.photoUrl ? (
-                                            <img src={formData.photoUrl} alt="Preview" className={styles.sidebar_img} />
-                                        ) : (
-                                            <span>Завантажити фото</span>
-                                        )}
-                                        <input type="file" ref={fileInputRef} hidden accept="image/*" onChange={handlePhotoUpload} />
-                                    </div>
-                                ) : (
-                                    <div className={styles.photo_display}>
-                                        {selectedMember?.photo_url ? (
-                                            <img src={selectedMember.photo_url} alt="Member" className={styles.sidebar_img} />
-                                        ) : (
-                                            <span className={styles.themed_label}>Немає фото</span>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-
-                <div className={styles.details_form}>
-                        {/* Ім'я */}
-                        <div className={styles.detail_item}>
-                            <span className={styles.themed_label}>Ім’я</span>
-                            <input 
-                                className={styles.themed_input}
-                                type="text" 
-                                readOnly={!isAdding && !isEditing}
-                                value={(isAdding || isEditing) ? formData.name : (selectedMember?.label || '')} 
-                                onChange={e => setFormData({...formData, name: e.target.value})}
-                            />
-                        </div>
-
-                        {/* Стать */}
-                        <div className={styles.detail_item}>
-                            <span className={styles.themed_label}>Стать</span>
-                            {(isAdding || isEditing) ? (
-                                <select className={styles.themed_input} value={formData.gender} onChange={e => setFormData({...formData, gender: e.target.value})}>
-                                    <option value="Чоловіча">Чоловіча</option>
-                                    <option value="Жіноча">Жіноча</option>
-                                </select>
-                            ) : (
-                                <input className={styles.themed_input} type="text" readOnly value={selectedMember?.gender === 1 ? 'Чоловіча' : 'Жіноча'} />
-                            )}
-                        </div>
-
-                        {/* Дата народження */}
-                        <div className={styles.detail_item}>
-                            <span className={styles.themed_label}>Народився</span>
-                            <input 
-                                className={styles.themed_input}
-                                type={(isAdding || isEditing) ? "date" : "text"} 
-                                readOnly={!isAdding && !isEditing}
-                                value={(isAdding || isEditing) ? formData.birthDate : (selectedMember?.birth_date?.slice(0, 10) || '')} 
-                                onChange={e => setFormData({...formData, birthDate: e.target.value})}
-                            />
-                        </div>
-
-                        {/* Дата смерті */}
-                        {(isAdding || isEditing || selectedMember?.death_date) && (
-                            <div className={styles.detail_item}>
-                                <span className={styles.themed_label}>Помер</span>
-                                <input 
-                                    className={styles.themed_input}
-                                    type={(isAdding || isEditing) ? "date" : "text"} 
-                                    readOnly={!isAdding && !isEditing}
-                                    value={(isAdding || isEditing) ? formData.deathDate : (selectedMember?.death_date?.slice(0, 10) || '')} 
-                                    onChange={e => setFormData({...formData, deathDate: e.target.value})}
-                                />
-                            </div>
-                        )}
-
-                        {/* Кнопки збереження/скасування */}
-                        {(isAdding || isEditing) && (
-                            <div className={styles.btn_container}>
-                                <button className={styles.themed_btn} onClick={handleSaveMember}>Зберегти</button>
-                                <button className={styles.themed_btn} style={{background: '#333'}} onClick={() => {
-                                    setIsAdding(false);
-                                    setIsEditing(false);
-                                }}>Відміна</button>
-                            </div>
-                        )}
-                    </div>
-                </aside>
+            {modalConfig?.isOpen && (
+                <CustomModal 
+                    isOpen={modalConfig.isOpen} 
+                    title={modalConfig.title} 
+                    message={modalConfig.message} 
+                    onConfirm={() => setModalConfig(null)} 
+                    onCancel={() => setModalConfig(null)} 
+                />
             )}
         </div>
     );

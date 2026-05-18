@@ -5,12 +5,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styles from './style.module.css';
-// 1. Імпортуємо хук useAuth
 import { useAuth } from '../../../lib/context/AuthContext'; 
 
 export default function RegisterPage() {
     const router = useRouter();
-    // 2. Отримуємо функцію login з контексту
     const { login } = useAuth(); 
     
     const [name, setName] = useState('');
@@ -40,13 +38,9 @@ export default function RegisterPage() {
                 throw new Error(data.message || 'Щось пішло не так');
             }
 
-            // 3. ВИКЛИКАЄМО LOGIN: передаємо дані користувача, які прийшли з сервера
-            // Це оновить глобальний стан (і Header) та запише дані в localStorage
             if (data.user) {
                 login(data.user);
             }
-
-            // 4. Перенаправляємо на головну сторінку Drevo
             router.push('/pages/main'); 
             
         } catch (err: any) {
@@ -76,13 +70,19 @@ export default function RegisterPage() {
 
                 <div className={styles.form_container}>
                     <div className={styles.logo_wrapper}>
-                        <Image src="/DrevoLogo.svg" alt="Drevo Logo" width={180} height={180} />
+                        <Image 
+                            src="/DrevoLogo.svg" 
+                            alt="Drevo Logo" 
+                            width={180} 
+                            height={180} 
+                            className={styles.logo_img}
+                        />
                     </div>
                     
                     <h1 className={styles.title}>Створення акаунту</h1>
 
                     <form className={styles.form} onSubmit={handleSubmit}>
-                        {error && <p className={styles.error_msg} style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+                        {error && <p className={styles.error_msg}>{error}</p>}
                         
                         <input 
                             type="text" 
@@ -109,11 +109,11 @@ export default function RegisterPage() {
                             required
                         />
                         
-                        <p className={styles.login_prompt}>
+                        <div className={styles.login_prompt}>
                             <Link href="/pages/auth" className={styles.login_link}>
                                 Вже є аккаунт? Увійти
                             </Link>
-                        </p>
+                        </div>
 
                         <button 
                             type="submit" 

@@ -1,10 +1,10 @@
 .page_layout {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-  background-color: #E4DFD6;
-  overflow: hidden;
-  /*transition: all 0.3s ease;*/
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: #E4DFD6;
+    overflow: hidden;
+    position: relative;
 }
 
 .search_block {
@@ -13,19 +13,17 @@
     gap: 10px;
     margin-bottom: 20px;
     padding-bottom: 20px;
-    border-bottom: 1px solid #4A5D57; /* Лінія-розділювач */
+    border-bottom: 1px solid #4A5D57;
 }
 
-/* Блок зв'язків */
 .connections_block {
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 1px solid #4A5D57; /* Лінія-розділювач */
-    flex-grow: 1; /* Щоб займав залишок місця знизу */
-    overflow-y: auto; /* Додає скрол, якщо зв'язків багато */
+    border-top: 1px solid #4A5D57;
+    flex-grow: 1;
+    overflow-y: auto;
 }
 
-/* Заголовок для Зв'язків */
 .themed_title_small {
     color: #AD9561;
     margin-top: 0;
@@ -36,7 +34,6 @@
     letter-spacing: 1px;
 }
 
-/* Список зв'язків */
 .connections_list {
     list-style: none;
     padding: 0;
@@ -49,7 +46,7 @@
 .connection_item {
     color: white;
     font-size: 13px;
-    padding: 10px;
+    padding: 12px;
     background: #4A5D57;
     border: 1px solid #AD9561;
     border-radius: 4px;
@@ -70,7 +67,6 @@
     font-style: italic;
 }
 
-/* Щоб кнопки і інпути в лівому меню були на всю ширину (опціонально) */
 .controls_group {
     display: flex;
     flex-direction: column;
@@ -78,9 +74,8 @@
     height: 100%;
 }
 
-/* Сайдбары */
 .sidebar_left, .sidebar_right {
-    width: 250px;
+    width: 260px;
     flex-shrink: 0;
     background-color: #202E2B;
     color: white;
@@ -89,21 +84,20 @@
     flex-direction: column;
     z-index: 20;
     overflow-y: auto;
-}
-
-.sidebar_closed .tree_area {
-    width: calc(100vw - 80px); /* 80px - ширина лівого сайдбару */
+    box-sizing: border-box;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .tree_area {
-  flex: 1; /* Займає весь доступний простір */
-  min-width: 0; /* КРИТИЧНО: дозволяє блоку стискатися, коли відкривається сайдбар */
-  position: relative;
-  height: 100vh;
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    height: 100vh;
+    transition: width 0.3s ease;
 }
 
-.sidebar_right {
-  background-color: #202E2B; /* Темный фон как на макете */
+.sidebar_closed .tree_area {
+    width: 100%;
 }
 
 .button_group {
@@ -116,17 +110,18 @@
     background: #AD9561;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border-radius: 5px;
     cursor: pointer;
     flex: 1;
+    font-weight: bold;
 }
 
 .cancel_btn {
     background: #333;
     color: #ccc;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -140,28 +135,22 @@
     cursor: pointer;
 }
 
-/* Центральная часть */
-.tree_area {
-  flex: 1;
-  position: relative;
-}
-
 .top_nav {
-  display: flex;
-  justify-content: flex-end;
-  gap: 30px;
-  padding: 20px;
-  position: absolute;
-  right: 0;
-  z-index: 10;
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+    padding: 20px;
+    position: absolute;
+    right: 0;
+    z-index: 10;
 }
 
 .nav_link {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  color: #171717;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #171717;
 }
 
 .canvas_wrapper {
@@ -177,7 +166,6 @@
     font-weight: bold;
 }
 
-/* Стили для 2D узлов */
 .tree_node {
     background: #171717 !important;
     color: white !important;
@@ -191,89 +179,74 @@
     border: 1px solid #AD9561 !important;
 }
 
-/* Формы в сайдбарах */
 .side_input, .side_input_small {
-  background-color: #4A5D57;
-  border: 1px solid #AD9561;
-  color: white;
-  padding: 5px 10px;
-  margin-bottom: 10px;
+    background-color: #4A5D57;
+    border: 1px solid #AD9561;
+    color: white;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    font-size: 16px;
 }
 
 .action_btn {
-  background: none;
-  border: 1px solid #AD9561;
-  color: white;
-  padding: 8px;
-  margin-bottom: 10px;
-  cursor: pointer;
+    background: none;
+    border: 1px solid #AD9561;
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 4px;
 }
 
-/* Правая часть (инфо) */
 .photo_placeholder {
-  width: 150px;
-  height: 150px;
-  background: black;
-  margin: 20px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: rotate(-45deg);
+    width: 120px;
+    height: 120px;
+    background: black;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-45deg);
 }
 
 .detail_item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 15px;
+    font-size: 14px;
 }
 
-.detail_item input {
-  background: #4A5D57;
-  border: 1px solid #AD9561;
-  color: #AD9561;
-  width: 120px;
-  padding: 2px 5px;
+.detail_item input, .detail_item select {
+    background: #4A5D57;
+    border: 1px solid #AD9561;
+    color: white;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
 }
 
 .floating_burger {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 100; /* Поверх дерева */
-    font-size: 24px;
-    color: #000000; /* Чорний за вашим запитом */
-    background: #AD9561; /* Золотистий фон, щоб кнопку було видно на фоні дерева */
-    width: 40px;
-    height: 40px;
+    top: 15px;
+    left: 15px;
+    z-index: 90;
+    font-size: 20px;
+    color: #202E2B;
+    background: #AD9561;
+    width: 44px;
+    height: 44px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 5px;
+    border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    transition: transform 0.2s ease;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.floating_burger:hover {
-    transform: scale(1.1);
-    background: #c5aa6e;
-}
-
-/* Переконайтеся, що основна область займає весь простір, коли сайдбар закритий */
-.tree_area {
-    position: relative; /* Для коректного позиціонування плаваючого бургера */
-    flex-grow: 1;
-    height: 100vh;
-    transition: width 0.3s ease;
-}
-
-.sidebar_closed .tree_area {
-    width: 100%; /* Або calc(100vw - ширина_лівого_сайдбару) */
-}
-
-/* Стиль бургера всередині відкритої панелі (для однорідності) */
 .burger_black {
     font-size: 24px;
     color: #AD9561;
@@ -284,38 +257,26 @@
 
 .themed_icon {
     cursor: pointer;
-    /* Цей фільтр конвертує чорний (#000) у приблизний #AD9561 */
     filter: invert(67%) sepia(13%) saturate(733%) hue-rotate(5deg) brightness(93%) contrast(89%);
     transition: filter 0.2s;
+    padding: 5px;
 }
 
-.themed_icon:hover {
-    filter: brightness(1.2) invert(67%) sepia(13%) saturate(733%) hue-rotate(5deg);
-}
-
-/* Єдиний стиль кнопок та полів */
 .themed_btn, .themed_input {
     background: #4A5D57;
     border: 1px solid #AD9561;
-    color: #AD9561;
-    width: 120px;
-    padding: 2px 5px;
-    font-size: 14px;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
     outline: none;
-    transition: opacity 0.2s;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
-.themed_btn:hover {
-    opacity: 0.8;
-    cursor: pointer;
-}
-
-.themed_btn:active {
-    background: #3a4a45;
-}
-
-.themed_input {
-    width: 100%; /* Для полів введення розширюємо на весь контейнер */
+.themed_btn {
+    color: #AD9561;
+    font-weight: 600;
 }
 
 .info_header {
@@ -329,9 +290,9 @@
     color: #AD9561;
     margin: 0;
     flex-grow: 1;
+    font-size: 20px;
 }
 
-/* Секція фото */
 .photo_upload_area {
     width: 100%;
     height: 180px;
@@ -343,6 +304,7 @@
     color: #AD9561;
     cursor: pointer;
     overflow: hidden;
+    border-radius: 8px;
 }
 
 .sidebar_img {
@@ -357,38 +319,90 @@
     gap: 10px;
 }
 
-/* Лабельки */
 .themed_label {
     color: #AD9561;
-    font-size: 12px;
+    font-size: 11px;
     display: block;
-    margin-bottom: 3px;
+    margin-bottom: 5px;
     text-transform: uppercase;
-}
-
-.detail_item {
-    margin-bottom: 15px;
+    letter-spacing: 0.5px;
 }
 
 .canvas_container {
-  width: 100%;
-  height: calc(100vh - 80px); /* Вычитаем высоту хедера */
-  background-color: #E4DFD6;
-}
-
-.toggle_btn {
-  background-color: #AD9561 !important;
-  color: #202E2B !important;
-  font-weight: bold;
+    width: 100%;
+    height: 100%;
+    background-color: #E4DFD6;
 }
 
 .mode_indicator {
-  position: absolute;
-  left: 20px;
-  top: 20px;
-  background: #202E2B;
-  color: #AD9561;
-  padding: 5px 15px;
-  border-radius: 20px;
-  font-size: 14px;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    background: #202E2B;
+    color: #AD9561;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    z-index: 10;
+    border: 1px solid #AD9561;
+}
+
+.mobile_backdrop {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile_backdrop {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(2px);
+        z-index: 15;
+    }
+
+    :global(.sidebar_left) {
+        position: fixed !important;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 290px;
+        max-width: 85vw;
+        z-index: 100;
+        box-shadow: 5px 0 25px rgba(0,0,0,0.3);
+        transform: translateX(0);
+    }
+
+    .sidebar_closed :global(.sidebar_left) {
+        transform: translateX(-100%);
+    }
+
+    :global(.sidebar_right) {
+        position: fixed !important;
+        right: 0;
+        top: 0;
+        height: 100vh;
+        width: 320px;
+        max-width: 90vw;
+        z-index: 101;
+        box-shadow: -5px 0 25px rgba(0,0,0,0.3);
+    }
+
+    .canvas_wrapper {
+        height: 100vh;
+        height: -webkit-fill-available;
+    }
+
+    .btn_container, .button_group {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .save_btn, .cancel_btn, .themed_btn {
+        width: 100%;
+        padding: 14px;
+    }
 }

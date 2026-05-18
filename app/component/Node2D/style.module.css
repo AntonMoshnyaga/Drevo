@@ -1,10 +1,12 @@
 .custom_node_2d {
     cursor: pointer;
+    pointer-events: all;
+    position: relative;
 }
 
 .node_card {
-    background: #202E2B; /* Твой темный цвет */
-    border: 2px solid #AD9561; /* Золото */
+    background: #202E2B;
+    border: 2px solid #AD9561;
     border-radius: 12px;
     padding: 10px;
     display: flex;
@@ -12,7 +14,7 @@
     gap: 12px;
     min-width: 200px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .node_card:hover {
@@ -48,6 +50,7 @@
 .node_info {
     display: flex;
     flex-direction: column;
+    text-align: left;
 }
 
 .node_name {
@@ -55,6 +58,7 @@
     font-weight: bold;
     font-size: 14px;
     margin-bottom: 2px;
+    white-space: nowrap;
 }
 
 .node_date {
@@ -63,10 +67,63 @@
     opacity: 0.8;
 }
 
-/* Стили для точек соединения (Handles) */
 .handle {
     background: #AD9561 !important;
     width: 8px !important;
     height: 8px !important;
     border: 1px solid #202E2B !important;
+    z-index: 10;
+}
+
+.handle::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    background: transparent;
+}
+
+@media (max-width: 768px) {
+    .node_card {
+        min-width: 150px;
+        padding: 6px 10px;
+        gap: 8px;
+        border-radius: 8px;
+    }
+
+    .node_card:hover {
+        transform: none; 
+    }
+
+    .node_photo_wrapper {
+        width: 36px;
+        height: 36px;
+    }
+
+    .node_photo_placeholder {
+        font-size: 18px;
+    }
+
+    .node_name {
+        font-size: 12px;
+        white-space: normal;
+        line-height: 1.2;
+    }
+
+    .node_date {
+        font-size: 10px;
+    }
+
+    .handle {
+        width: 12px !important;
+        height: 12px !important;
+    }
+
+    .handle::after {
+        width: 36px;
+        height: 36px;
+    }
 }

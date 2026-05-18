@@ -31,7 +31,6 @@ export default function LoginPage() {
 
             if (!res.ok) throw new Error(data.message);
 
-            // ВИКОРИСТОВУЄМО КОНТЕКСТ
             login(data.user); 
 
             router.push('/pages/main');
@@ -54,13 +53,19 @@ export default function LoginPage() {
 
                 <div className={styles.form_container}>
                     <div className={styles.logo_wrapper}>
-                        <Image src="/DrevoLogo.svg" alt="Drevo Logo" width={180} height={180} />
+                        <Image 
+                            src="/DrevoLogo.svg" 
+                            alt="Drevo Logo" 
+                            width={160} 
+                            height={160} 
+                            className={styles.logo_img}
+                        />
                     </div>
                     
                     <h1 className={styles.title}>З поверненням</h1>
 
                     <form className={styles.form} onSubmit={handleLogin}>
-                        {error && <p className={styles.error_msg} style={{color: 'red'}}>{error}</p>}
+                        {error && <p className={styles.error_msg}>{error}</p>}
                         
                         <input 
                             type="text" 
@@ -83,7 +88,7 @@ export default function LoginPage() {
                             <Link href="/pages/registr" className={styles.secondary_link}>
                                 Відсутній аккаунт?
                             </Link>
-                            <Link href="/auth/reset" className={styles.secondary_link}>
+                            <Link href="/pages/auth/reset" className={styles.secondary_link}>
                                 Забули пароль?
                             </Link>
                         </div>

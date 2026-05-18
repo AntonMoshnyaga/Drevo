@@ -3,7 +3,6 @@ import pool from '@/lib/db';
 
 export async function DELETE(request: Request) {
     try {
-        // Отримуємо дані з тіла запиту
         const body = await request.json();
         const { id } = body;
 

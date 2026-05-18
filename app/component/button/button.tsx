@@ -4,9 +4,7 @@ import styles from "./style.module.css";
 
 interface ButtonProps {
   children: React.ReactNode;
-  // 1. Робимо href необов'язковим
   href?: string; 
-  // 2. Додаємо підтримку onClick та інших стандартних атрибутів кнопки
   onClick?: (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
   variant?: "primary" | "outline";
   className?: string;
@@ -25,7 +23,6 @@ export default function Button({
   const variantClass = variant === "primary" ? styles.primary : styles.outline;
   const combinedClassName = `${styles.button} ${variantClass} ${className || ""}`;
 
-  // 3. Логіка вибору тега: якщо є href — використовуємо Link, інакше — <button>
   if (href) {
     return (
       <Link href={href} className={combinedClassName} onClick={onClick}>

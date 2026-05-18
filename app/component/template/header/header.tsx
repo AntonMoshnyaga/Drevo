@@ -11,6 +11,7 @@ import { useAuth } from '../../../../lib/context/AuthContext';
 export default function Header() {
     const { user, logout } = useAuth();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isBurgerOpen, setIsBurgerOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
@@ -27,6 +28,7 @@ export default function Header() {
     const handleLogout = () => {
         logout();
         setIsDropdownOpen(false);
+        setIsBurgerOpen(false);
         router.push('/'); 
     };
 
@@ -35,28 +37,39 @@ export default function Header() {
     return (
         <header className={style.header}>
             <div className={style.header_container}>
-                <Link href={logoHref} className="flex items-center">
+                <Link href={logoHref} className="flex items-center" onClick={() => setIsBurgerOpen(false)}>
                     <Image 
                         src="/DrevoLogo.svg" 
                         alt="Drevo" 
                         width={80} 
                         height={80} 
+                        className={style.logo_img}
                         priority 
                     />
                 </Link>
 
-                <nav className={style.nav_links}>
+                {!user && (
+                    <button 
+                        className={`${style.burger_btn} ${isBurgerOpen ? style.burger_active : ''}`}
+                        onClick={() => setIsBurgerOpen(!isBurgerOpen)}
+                        aria-label="Menu"
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                )}
+
+                <nav className={`${style.nav_links} ${isBurgerOpen ? style.nav_open : ''}`}>
                     {user ? (
                         <div className={style.dropdown_container} ref={dropdownRef}>
                             <button 
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                                 className={style.user_menu_btn}
                             >
-                                
                                 <span className={style.user_name}>{user.name}</span>
                                 <span className={style.arrow}>{isDropdownOpen ? '▴' : '▾'}</span>
 
-                                
                                 <div className={style.avatar_wrapper}>
                                     {user.photo_url ? (
                                         <img 
@@ -91,7 +104,7 @@ export default function Header() {
                             )}
                         </div>
                     ) : (
-                        <div className="flex gap-4">
+                        <div className={style.auth_buttons}>
                             <Button href="/pages/registr" variant="primary">Розпочати</Button>
                             <Button href="/pages/auth" variant="primary">Увійти</Button>
                         </div>

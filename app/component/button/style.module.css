@@ -8,6 +8,8 @@
     letter-spacing: 0.1em;
     transition: all 0.2s ease;
     text-decoration: none;
+    cursor: pointer;
+    text-align: center;
 }
 
 .primary {
@@ -32,4 +34,13 @@
     background-color: #AD9561;
     color: #202E2B;          
     border-color: #AD9561;
+}
+
+@media (max-width: 768px) {
+    .button {
+        padding: 14px 20px;
+        font-size: 13px;
+        letter-spacing: 0.05em;
+        width: 100%;
+    }
 }
