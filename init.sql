@@ -1,19 +1,16 @@
--- Создание таблицы ролей
 CREATE TABLE IF NOT EXISTS roles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     role_name VARCHAR(50) NOT NULL
 );
 
--- Создание таблицы аккаунтов
 CREATE TABLE IF NOT EXISTS accounts (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(150) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     photo_url LONGTEXT
 );
 
--- Создание таблицы семей
 CREATE TABLE IF NOT EXISTS families (
     id INT AUTO_INCREMENT PRIMARY KEY,
     account_id INT NOT NULL,
@@ -21,7 +18,6 @@ CREATE TABLE IF NOT EXISTS families (
     FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
 );
 
--- Таблица связей (аккаунт - семья - роль)
 CREATE TABLE IF NOT EXISTS connections (
     id INT AUTO_INCREMENT PRIMARY KEY,
     family_id INT NOT NULL,
@@ -32,7 +28,6 @@ CREATE TABLE IF NOT EXISTS connections (
     FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
--- Таблица членов семьи
 CREATE TABLE IF NOT EXISTS family_members (
     id INT AUTO_INCREMENT PRIMARY KEY,
     family_id INT NOT NULL,
@@ -44,7 +39,6 @@ CREATE TABLE IF NOT EXISTS family_members (
     FOREIGN KEY (family_id) REFERENCES families(id) ON DELETE CASCADE
 );
 
--- Таблица родственных связей между членами семьи
 CREATE TABLE IF NOT EXISTS relationships (
     id INT AUTO_INCREMENT PRIMARY KEY,
     parent_id INT NOT NULL,
@@ -52,11 +46,9 @@ CREATE TABLE IF NOT EXISTS relationships (
     relation_type ENUM('biological', 'step', 'adopted') DEFAULT 'biological',
     FOREIGN KEY (parent_id) REFERENCES family_members(id) ON DELETE CASCADE,
     FOREIGN KEY (child_id) REFERENCES family_members(id) ON DELETE CASCADE,
-    -- Унікальний ключ, щоб не створювати дублікати однакових зв'язків
     UNIQUE KEY unique_rel (parent_id, child_id)
 );
 
--- Таблица кодов присоединения
 CREATE TABLE IF NOT EXISTS join_codes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     family_id INT NOT NULL,
